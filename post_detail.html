@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المقال</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>تفاصيل المقال</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الصفحة الرئيسية</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article id="postDetail">
+            <!-- تفاصيل المقال ستظهر هنا -->
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 مدونتي الفخمة. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // جلب المقال المحدد من localStorage
+        const post = JSON.parse(localStorage.getItem('currentPost'));
+        const postDetailSection = document.getElementById('postDetail');
+
+        if (post && postDetailSection) {
+            postDetailSection.innerHTML = `
+                <h2>${post.title}</h2>
+                <img src="${post.imageUrl}" alt="${post.title}">
+                <p>${post.content}</p>
+            `;
+        } else {
+            postDetailSection.innerHTML = `<p>المقال غير موجود.</p>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة مقال</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>إضافة مقال جديد</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الصفحة الرئيسية</a></li>
+                    <li><a href="add_post.html">إضافة مقال</a></li>
+                    <li><button id="logoutBtn" onclick="logout()">تسجيل الخروج</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="adminMessage" style="display: none;">
+            <p>يرجى تسجيل الدخول لإضافة مقال.</p>
+            <button onclick="window.location.href='index.html'">العودة إلى الصفحة الرئيسية</button>
+        </div>
+        <form id="addPostForm" style="display: none;">
+            <input type="text" id="postTitle" placeholder="عنوان المقال" required>
+            <textarea id="postContent" placeholder="محتوى المقال" required></textarea>
+            <input type="file" id="postImage" accept="image/*" required>
+            <button type="submit">نشر المقال</button>
+        </form>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 مدونتي الفخمة. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // التحقق من تسجيل الدخول
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const adminMessage = document.getElementById('adminMessage');
+        const addPostForm = document.getElementById('addPostForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (isAdmin) {
+            addPostForm.style.display = 'block'; // إظهار الفورم
+            logoutBtn.style.display = 'block'; // إظهار زر تسجيل الخروج
+        } else {
+            adminMessage.style.display = 'block'; // إظهار رسالة التحذير
+            logoutBtn.style.display = 'none'; // إخفاء زر تسجيل الخروج
+        }
+
+        // تسجيل الخروج
+        function logout() {
+            localStorage.setItem('isAdmin', 'false');
+            alert('تم تسجيل الخروج بنجاح!');
+            window.location.href = 'index.html';
+        }
+
+        // إضافة مقال جديد
+        document.getElementById('addPostForm')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const imageFile = document.getElementById('postImage').files[0];
+
+            if (title && content && imageFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageUrl = e.target.result;
+                    const newPost = { title, content, imageUrl };
+
+                    // جلب المقالات الحالية من localStorage
+                    let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+                    // إضافة المقال الجديد
+                    posts.push(newPost);
+
+                    // حفظ المقالات في localStorage
+                    localStorage.setItem('posts', JSON.stringify(posts));
+
+                    alert('تمت إضافة المقال بنجاح');
+                    window.location.href = 'index.html'; // الانتقال إلى الصفحة الرئيسية
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                alert('يرجى ملء جميع الحقول');
+            }
+        });
+    </script>
+</body>
+</html>
